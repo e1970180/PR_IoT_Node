@@ -1,0 +1,38 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+PR_IoT_NodeMQTTClass	KEYWORD1
+NodeMQTT		KEYWORD1
+IoT_Msg  		KEYWORD1	
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+connect		KEYWORD2	
+represent	KEYWORD2	
+subscribe	KEYWORD2
+postMsg		KEYWORD2	
+callback	KEYWORD2	
+isOnline	KEYWORD2
+setOnline	KEYWORD2
+getNodeSubTopic	KEYWORD2
+getclientID	KEYWORD2
+
+parceSubTopic   	KEYWORD2
+
+
+
+
+
+######################################
+# Constants (LITERAL1)
+######################################
+
+#       		LITERAL1
+
