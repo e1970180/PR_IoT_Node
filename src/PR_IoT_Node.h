@@ -5,7 +5,7 @@
     #include <string.h>
 	#include <Esp.h>                    // core
 
-    #include "PR_IoT.h" 
+    #include "PR_IoT.h"
 
     struct  IoT_Msg {
 		//String	location;
@@ -40,10 +40,11 @@
 			const String	_nodeName;
 			const String	_nodeSubTopic;
 			const String	_nodeSubTopicCmd;
+			const String	_nodeSubTopicState;
 	};
 
     extern  struct IoT_Msg      inMsg;
 	extern	PR_IoT_NodeMQTTClass	NodeMQTT;
-	extern  void 	parceSubTopic (String *topic, String *subTopic);
+	extern  void 	parceRootSubTopic (String *topic, String *rootSubTopic);
     extern  void    callbackMQTT(const char* topic, byte* payload, unsigned int length);
 #endif    

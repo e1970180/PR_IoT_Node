@@ -2,7 +2,6 @@
     
     struct IoT_Msg  	inMsg;
 	
-	
 
 	PR_IoT_NodeMQTTClass::PR_IoT_NodeMQTTClass(String location, String nodeName)
 		:	
@@ -11,7 +10,8 @@
 			_location(location),
 			_nodeName(nodeName),
 			_nodeSubTopic( siteSubTopic +"/"+ _location +"/"+ _nodeName ),
-			_nodeSubTopicCmd( siteSubTopic +"/"+ _location +"/"+ _nodeName +"/command" )
+			_nodeSubTopicCmd  ( siteSubTopic +"/"+ _location +"/"+ _nodeName +"/command/" ),
+			_nodeSubTopicState( siteSubTopic +"/"+ _location +"/"+ _nodeName +"/state/" )
 		{} 
 	
     bool 	PR_IoT_NodeMQTTClass::connect() {
@@ -30,7 +30,7 @@
     }
 
 	void 	PR_IoT_NodeMQTTClass::represent() {
-	    MQTTclient.publish((_nodeSubTopic + "status/sys").c_str(), "HELLO");  //announce the node to the system
+	    MQTTclient.publish((_nodeSubTopicState + "sys").c_str(), "HELLO");  //announce the node to the system
 	}
     
 
@@ -38,7 +38,7 @@
 													//site/location/node/"conmmand"/# 
 													//site/sys/command/# 
 		PR_DBGT("subscribe site/location/node/conmmand/# ")
-		bool subscResult = MQTTclient.subscribe( (_nodeSubTopicCmd + "/#").c_str() );
+		bool subscResult = MQTTclient.subscribe( (_nodeSubTopicCmd + "#").c_str() );
 		subscResult = subscResult && MQTTclient.subscribe( (siteSubTopic + "/sys/command/#").c_str() );
 		
 		if (subscResult) PR_DBGTLN(" Success") else PR_DBGTLN(" Fail")
@@ -62,25 +62,31 @@
 		payload[length] = '\0';					
     	inMsg.payload = String((char*)payload);
 		
-		inMsg.deviceName = topic;
+		inMsg.deviceTopic = topic;
 		
-		if ( inMsg.deviceName.startsWith(_nodeSubTopicCmd) ) {						//device message
+		if ( inMsg.deviceTopic.startsWith(_nodeSubTopicCmd) ) {						//device message
 			
-			inMsg.deviceName.remove(0, _nodeSubTopicCmd.length()+1);	
-			parceSubTopic(&inMsg.deviceName , &inMsg.deviceTopic);
+			inMsg.deviceTopic.remove(0, _nodeSubTopicCmd.length() );
+			parceRootSubTopic(&inMsg.deviceTopic , &inMsg.deviceName); //topic -> ( toppic, rootSubTopic ) 
 			inMsg.newMsgFlag = true;
 		} 
-		else if ( inMsg.deviceName.startsWith(siteSubTopic + "/sys/command") ) {	//sys message
+		else if ( inMsg.deviceTopic.startsWith(siteSubTopic + "/sys/command") ) {	//sys message
 				
-			inMsg.deviceTopic = inMsg.deviceName.substring( (siteSubTopic + "/sys/command").length()+1);
+			inMsg.deviceTopic.remove(0, (siteSubTopic + "/sys/command/").length() );
 			inMsg.deviceName = "sys";
 			inMsg.newMsgFlag = true;
 		} 
+		PR_DBGTLN("Msg parced")
+		PR_DBGVLN(inMsg.deviceName)
+		PR_DBGVLN(inMsg.deviceTopic)
+		PR_DBGVLN(inMsg.payload)
+		PR_DBGTLN("----")
+		
     } //callbackMQTT
 
     bool    PR_IoT_NodeMQTTClass::postMsg(const String deviceTopic, const String payload) {
                
-		bool result = MQTTclient.publish( (_nodeSubTopic + "/status/" + deviceTopic).c_str(), payload.c_str() );
+		bool result = MQTTclient.publish( (_nodeSubTopicState + deviceTopic).c_str(), payload.c_str() );
         
 				PR_DBGT("MQTTclient post msg .. /status/") PR_DBGV(deviceTopic) PR_DBGT(" ") PR_DBGV(payload) PR_DBGTLN(" ")
 				if (result) PR_DBGTLN("OK") else PR_DBGTLN("FAIL")
@@ -88,14 +94,14 @@
 		return result;       
     }
     
-	void    parceSubTopic (String *topic, String *subTopic) {
+	void    parceRootSubTopic (String *topic, String *rootSubTopic) {
 		int position = topic->indexOf('/');
 		if (position>=0) {
-			*subTopic = topic->substring(0, position);
+			*rootSubTopic = topic->substring(0, position);
 			topic->remove(0, position+1);
 		} 
 		else {
-			*subTopic = *topic;
+			*rootSubTopic = *topic;
 			*topic = "";
 		}
 	}
