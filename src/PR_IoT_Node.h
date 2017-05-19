@@ -25,7 +25,7 @@
 			void	represent();
 			bool    subscribe(); 
 			
-			bool 	postMsg(const String subTopic, const String payload);
+			bool 	postMsg(const String deviceName, const String subTopic,const String payload);
 			void 	callback(const char* topic, byte* payload, unsigned int length);
     
 			bool	isOnline()				{	return _online;			}
@@ -39,8 +39,9 @@
 			const String	_location;
 			const String	_nodeName;
 			const String	_nodeSubTopic;
-			const String	_nodeSubTopicCmd;
-			const String	_nodeSubTopicState;
+			const String	_Cmd = "COMMAND";
+			const String	_Status = "STATUS";
+	
 	};
 
     extern  struct IoT_Msg      inMsg;
