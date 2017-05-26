@@ -21,7 +21,7 @@
         public:
 			PR_IoT_NodeMQTTClass(String location, String nodeName);	
 			
-			bool    connect();
+			bool    connect(const char* clientID);
 			void	represent();
 			bool    subscribe(); 
 			
@@ -31,10 +31,10 @@
 			bool	isOnline()				{	return _online;			}
 			void	setOnline(bool state)	{	_online = state; 		}
 			String	getNodeSubTopic()		{	return _nodeSubTopic;	}
-			const 	char*	getclientID()	{	return _clientID;		}
+			//const 	char*	getclientID()	{	return _clientID;		}
 			
 		protected:
-			const 	char*	_clientID;
+			//const 	char*	_clientID;
 			bool			_online;
 			const String	_location;
 			const String	_nodeName;

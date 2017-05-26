@@ -5,7 +5,7 @@
 
 	PR_IoT_NodeMQTTClass::PR_IoT_NodeMQTTClass(String location, String nodeName)
 		:	
-			_clientID("unit1"),
+			//_clientID(clientID),
 			_online(false),
 			_location(location),
 			_nodeName(nodeName),
@@ -13,13 +13,13 @@
 			
 		{} 
 	
-    bool 	PR_IoT_NodeMQTTClass::connect() {
+    bool 	PR_IoT_NodeMQTTClass::connect(const char* clientID) {
 		
 		if ( MQTTclient.connected() ) return (_online = true);
 		
 		PR_DBGT("MQTT connection FAILED. Reason=") PR_DBGVLN(MQTTclient.state())	
 		
-		_online = MQTTclient.connect(_clientID);	//RE-connect
+		_online = MQTTclient.connect(clientID);	//RE-connect
 			
 		if (_online)	{			//on sucessful reconnect
 			represent();

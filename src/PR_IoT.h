@@ -7,7 +7,6 @@
     extern  WiFiClient      ESP8266Client;
     extern  PubSubClient    MQTTclient;
 
-    //extern  const String    nodeName;
     extern  const char*     MQTT_clientID;
 
     extern  struct IoT_Msg  incomeMsg;
@@ -18,10 +17,10 @@
 
     #define     PR_DEBUG_ON
     #define     PR_DBG_SERIALDEVICE Serial
-    #include <PR_DBG.h>   
+    #include 	<PR_DBG.h>   
     
-	extern  const 	char* 	WiFi_ssid;
-	extern  const 	char* 	WiFi_password;
+	//extern  const 	char* 	WiFi_ssid;
+	//extern  const 	char* 	WiFi_password;
 	extern  IPAddress   	MQTT_server;
 	extern  const 	int   	MQTT_port;  
 													
