@@ -2,6 +2,31 @@
     
     struct IoT_Msg  	inMsg;
 	
+    bool    PR_IoT_MQTTcreditals::save() {
+		salt = EEPROM_CREDITALS_SALT;
+        EEPROM.begin(512);
+        EEPROM.put(PR_IoT_MQTT_EEPROM_ADDR_CREDITALS, *this);
+        EEPROM.end();
+		PR_DBGTLN("MQTT creditals saved to EEPROM")
+			
+	}
+	
+    bool	PR_IoT_MQTTcreditals::restore() {
+        EEPROM.begin(512);
+        EEPROM.get(PR_IoT_MQTT_EEPROM_ADDR_CREDITALS, *this);
+		EEPROM.end();
+		
+		if (salt != EEPROM_CREDITALS_SALT) {
+			PR_DBGTLN("Invalid settings in EEPROM, set defaults")
+			serverIP  = IPAddress(192,168,111,99);
+			port      = 1883;
+			username[0]  = 0;
+			password[0]  = 0; 
+			return false;
+		}       
+		return true;
+    }  
+
 
 	PR_IoT_NodeMQTTClass::PR_IoT_NodeMQTTClass(String location, String nodeName)
 		:	
@@ -17,10 +42,9 @@
 		
 		if ( MQTTclient.connected() ) return (_online = true);
 		
-		PR_DBGT("MQTT connection FAILED. Reason=") PR_DBGVLN(MQTTclient.state())	
+			PR_DBGT("MQTT connection FAILED. Reason=") PR_DBGVLN(MQTTclient.state())	
 		
-		_online = MQTTclient.connect(clientID);	//RE-connect
-			
+		_online = MQTTclient.connect(clientID);	//RE-connect	
 		if (_online)	{			//on sucessful reconnect
 			represent();
 			subscribe();
@@ -36,9 +60,12 @@
     bool    PR_IoT_NodeMQTTClass::subscribe() {   	//listen commands to the node
 													//site/location/node/+/"conmmand"/# 
 													//site/sys/command/# 
+		bool subscResult;
+		
 		PR_DBGT("subscribe site/location/node/# ")
-		bool subscResult = MQTTclient.subscribe( (_nodeSubTopic + "+/COMMAND/#").c_str() );
-		subscResult = subscResult && MQTTclient.subscribe( (siteSubTopic + "/sys/COMMAND/#").c_str() );
+		
+		subscResult = MQTTclient.subscribe( (_nodeSubTopic + "+/" + _Cmd + "/#").c_str() );
+		subscResult = subscResult && MQTTclient.subscribe( (siteSubTopic + "/sys/" + _Cmd +"/#").c_str() );
 		
 		if (subscResult) PR_DBGTLN(" Success") else PR_DBGTLN(" Fail")
 
