@@ -18,7 +18,7 @@
 		
 		if (salt != EEPROM_CREDITALS_SALT) {
 			PR_DBGTLN("Invalid settings in EEPROM, set defaults")
-			serverIP  = IPAddress(192,168,111,99);
+			serverIP  = IPAddress(192,168,111,100);
 			port      = 1883;
 			username[0]  = 0;
 			password[0]  = 0; 
@@ -62,7 +62,7 @@
 													//site/sys/command/# 
 		bool subscResult;
 		
-		PR_DBGT("subscribe site/location/node/# ")
+		PR_DBGT("subscribe site/location/node/# ") //  siteSubTopic/_location/_nodeName/COMMAND/"
 		
 		subscResult = MQTTclient.subscribe( (_nodeSubTopic + "+/" + _Cmd + "/#").c_str() );
 		subscResult = subscResult && MQTTclient.subscribe( (siteSubTopic + "/sys/" + _Cmd +"/#").c_str() );

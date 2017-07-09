@@ -6,12 +6,14 @@
 	#include <Esp.h>                    // core
 	#include <EEPROM.h>
 	
+	#include <ESP8266WiFi.h>            //https://github.com/esp8266/Arduino
+    #include <PubSubClient.h>           //https://github.com/knolleary/pubsubclient
 	
     #include "PR_IoT.h"
-
-	#define	PR_IoT_MQTT_NAMEPW_MAX_LEN				10
+	
+	#define	PR_IoT_MQTT_NAMEPW_MAX_LEN				16
 	#define	PR_IoT_MQTT_EEPROM_ADDR_CREDITALS		0
-	#define	EEPROM_CREDITALS_SALT					321
+	#define	EEPROM_CREDITALS_SALT					12321
 	
     struct  IoT_Msg {
 		//String	location;

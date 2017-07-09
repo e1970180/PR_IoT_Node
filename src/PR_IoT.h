@@ -19,14 +19,6 @@
     #define     PR_DBG_SERIALDEVICE Serial
     #include 	<PR_DBG.h>   
     
-	//extern  const 	char* 	WiFi_ssid;
-	//extern  const 	char* 	WiFi_password;
-	extern  IPAddress   	MQTT_server;
-	extern  const 	int   	MQTT_port;  
-													
-	extern  const 	char* 	MQTT_username;
-	extern  const 	char* 	MQTT_password;
-	
 	extern  const	String	siteSubTopic;
 
 #endif
